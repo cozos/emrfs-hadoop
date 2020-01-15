@@ -1,0 +1,2 @@
+com.amazon.ws.emr.hadoop.fs.shaded.com.fasterxml.jackson.core.JsonFactory
+com.amazon.ws.emr.hadoop.fs.shaded.com.fasterxml.jackson.dataformat.cbor.CBORFactory

@@ -1,0 +1,59 @@
+package com.amazon.ws.emr.hadoop.fs.shaded.com.amazonaws.services.dynamodbv2.datamodeling;
+
+import com.amazon.ws.emr.hadoop.fs.shaded.com.fasterxml.jackson.databind.DeserializationFeature;
+import com.amazon.ws.emr.hadoop.fs.shaded.com.fasterxml.jackson.databind.ObjectMapper;
+import java.lang.annotation.Annotation;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
+@DynamoDBTypeConverted(converter=Converter.class)
+@DynamoDBTyped(DynamoDBMapperFieldModel.DynamoDBAttributeType.S)
+@Retention(RetentionPolicy.RUNTIME)
+@Target({java.lang.annotation.ElementType.TYPE, java.lang.annotation.ElementType.FIELD, java.lang.annotation.ElementType.METHOD})
+public @interface DynamoDBTypeConvertedJson
+{
+  Class<? extends Object> targetType() default void.class;
+  
+  public static final class Converter<T>
+    implements DynamoDBTypeConverter<String, T>
+  {
+    private static final ObjectMapper mapper = new ObjectMapper().disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+    private final Class<T> targetType;
+    
+    public Converter(Class<T> targetType, DynamoDBTypeConvertedJson annotation)
+    {
+      this.targetType = (annotation.targetType() == Void.TYPE ? targetType : annotation.targetType());
+    }
+    
+    public final String convert(T object)
+    {
+      try
+      {
+        return mapper.writeValueAsString(object);
+      }
+      catch (Exception e)
+      {
+        throw new DynamoDBMappingException("Unable to write object to JSON", e);
+      }
+    }
+    
+    public final T unconvert(String object)
+    {
+      try
+      {
+        return (T)mapper.readValue(object, targetType);
+      }
+      catch (Exception e)
+      {
+        throw new DynamoDBMappingException("Unable to read JSON string", e);
+      }
+    }
+  }
+}
+
+/* Location:
+ * Qualified Name:     com.amazon.ws.emr.hadoop.fs.shaded.com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTypeConvertedJson
+ * Java Class Version: 6 (50.0)
+ * JD-Core Version:    0.7.1
+ */

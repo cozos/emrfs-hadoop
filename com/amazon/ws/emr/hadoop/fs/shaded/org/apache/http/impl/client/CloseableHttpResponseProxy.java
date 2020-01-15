@@ -1,0 +1,93 @@
+package com.amazon.ws.emr.hadoop.fs.shaded.org.apache.http.impl.client;
+
+import com.amazon.ws.emr.hadoop.fs.shaded.org.apache.http.HttpEntity;
+import com.amazon.ws.emr.hadoop.fs.shaded.org.apache.http.HttpResponse;
+import com.amazon.ws.emr.hadoop.fs.shaded.org.apache.http.client.methods.CloseableHttpResponse;
+import com.amazon.ws.emr.hadoop.fs.shaded.org.apache.http.util.EntityUtils;
+import java.io.IOException;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
+
+@Deprecated
+class CloseableHttpResponseProxy
+  implements InvocationHandler
+{
+  private static final Constructor<?> CONSTRUCTOR;
+  private final HttpResponse original;
+  
+  static
+  {
+    try
+    {
+      CONSTRUCTOR = Proxy.getProxyClass(CloseableHttpResponseProxy.class.getClassLoader(), new Class[] { CloseableHttpResponse.class }).getConstructor(new Class[] { InvocationHandler.class });
+    }
+    catch (NoSuchMethodException ex)
+    {
+      throw new IllegalStateException(ex);
+    }
+  }
+  
+  CloseableHttpResponseProxy(HttpResponse original)
+  {
+    this.original = original;
+  }
+  
+  public void close()
+    throws IOException
+  {
+    HttpEntity entity = original.getEntity();
+    EntityUtils.consume(entity);
+  }
+  
+  public Object invoke(Object proxy, Method method, Object[] args)
+    throws Throwable
+  {
+    String mname = method.getName();
+    if (mname.equals("close"))
+    {
+      close();
+      return null;
+    }
+    try
+    {
+      return method.invoke(original, args);
+    }
+    catch (InvocationTargetException ex)
+    {
+      Throwable cause = ex.getCause();
+      if (cause != null) {
+        throw cause;
+      }
+      throw ex;
+    }
+  }
+  
+  public static CloseableHttpResponse newProxy(HttpResponse original)
+  {
+    try
+    {
+      return (CloseableHttpResponse)CONSTRUCTOR.newInstance(new Object[] { new CloseableHttpResponseProxy(original) });
+    }
+    catch (InstantiationException ex)
+    {
+      throw new IllegalStateException(ex);
+    }
+    catch (InvocationTargetException ex)
+    {
+      throw new IllegalStateException(ex);
+    }
+    catch (IllegalAccessException ex)
+    {
+      throw new IllegalStateException(ex);
+    }
+  }
+}
+
+/* Location:
+ * Qualified Name:     com.amazon.ws.emr.hadoop.fs.shaded.org.apache.http.impl.client.CloseableHttpResponseProxy
+ * Java Class Version: 6 (50.0)
+ * JD-Core Version:    0.7.1
+ */

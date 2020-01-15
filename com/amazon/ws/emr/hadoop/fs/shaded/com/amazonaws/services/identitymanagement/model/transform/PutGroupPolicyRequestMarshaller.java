@@ -1,0 +1,40 @@
+package com.amazon.ws.emr.hadoop.fs.shaded.com.amazonaws.services.identitymanagement.model.transform;
+
+import com.amazon.ws.emr.hadoop.fs.shaded.com.amazonaws.DefaultRequest;
+import com.amazon.ws.emr.hadoop.fs.shaded.com.amazonaws.Request;
+import com.amazon.ws.emr.hadoop.fs.shaded.com.amazonaws.SdkClientException;
+import com.amazon.ws.emr.hadoop.fs.shaded.com.amazonaws.http.HttpMethodName;
+import com.amazon.ws.emr.hadoop.fs.shaded.com.amazonaws.services.identitymanagement.model.PutGroupPolicyRequest;
+import com.amazon.ws.emr.hadoop.fs.shaded.com.amazonaws.transform.Marshaller;
+import com.amazon.ws.emr.hadoop.fs.shaded.com.amazonaws.util.StringUtils;
+
+public class PutGroupPolicyRequestMarshaller
+  implements Marshaller<Request<PutGroupPolicyRequest>, PutGroupPolicyRequest>
+{
+  public Request<PutGroupPolicyRequest> marshall(PutGroupPolicyRequest putGroupPolicyRequest)
+  {
+    if (putGroupPolicyRequest == null) {
+      throw new SdkClientException("Invalid argument passed to marshall(...)");
+    }
+    Request<PutGroupPolicyRequest> request = new DefaultRequest(putGroupPolicyRequest, "AmazonIdentityManagement");
+    request.addParameter("Action", "PutGroupPolicy");
+    request.addParameter("Version", "2010-05-08");
+    request.setHttpMethod(HttpMethodName.POST);
+    if (putGroupPolicyRequest.getGroupName() != null) {
+      request.addParameter("GroupName", StringUtils.fromString(putGroupPolicyRequest.getGroupName()));
+    }
+    if (putGroupPolicyRequest.getPolicyName() != null) {
+      request.addParameter("PolicyName", StringUtils.fromString(putGroupPolicyRequest.getPolicyName()));
+    }
+    if (putGroupPolicyRequest.getPolicyDocument() != null) {
+      request.addParameter("PolicyDocument", StringUtils.fromString(putGroupPolicyRequest.getPolicyDocument()));
+    }
+    return request;
+  }
+}
+
+/* Location:
+ * Qualified Name:     com.amazon.ws.emr.hadoop.fs.shaded.com.amazonaws.services.identitymanagement.model.transform.PutGroupPolicyRequestMarshaller
+ * Java Class Version: 6 (50.0)
+ * JD-Core Version:    0.7.1
+ */

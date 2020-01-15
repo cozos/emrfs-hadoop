@@ -1,0 +1,26 @@
+package com.amazon.ws.emr.hadoop.fs.shaded.org.apache.http;
+
+public class HttpException
+  extends Exception
+{
+  private static final long serialVersionUID = -5437299376222011036L;
+  
+  public HttpException() {}
+  
+  public HttpException(String message)
+  {
+    super(message);
+  }
+  
+  public HttpException(String message, Throwable cause)
+  {
+    super(message);
+    initCause(cause);
+  }
+}
+
+/* Location:
+ * Qualified Name:     com.amazon.ws.emr.hadoop.fs.shaded.org.apache.http.HttpException
+ * Java Class Version: 6 (50.0)
+ * JD-Core Version:    0.7.1
+ */
